@@ -1,0 +1,44 @@
+// prisma/schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Farmer {
+  id        Int       @id @default(autoincrement())
+  cpf_cnpj  String    @unique
+  name      String
+  farms     Property[]
+}
+
+model Property {
+  id              Int       @id @default(autoincrement())
+  farmer_id       Int
+  farmer          Farmer    @relation(fields: [farmer_id], references: [id], onDelete: Cascade)
+  property_name   String
+  city            String
+  uf              String    @db.VarChar(2)
+  total_area      Float
+  agricultural_area Float
+  vegetation_area Float
+  harvests        Harvest[]
+}
+
+model Harvest {
+  id          Int       @id @default(autoincrement())
+  property_id Int
+  property    Property  @relation(fields: [property_id], references: [id], onDelete: Cascade)
+  year        Int
+  crops       Crop[]
+}
+
+model Crop {
+  id          Int       @id @default(autoincrement())
+  harvest_id   Int
+  harvest     Harvest   @relation(fields: [harvest_id], references: [id], onDelete: Cascade)
+  name        String    
+}
