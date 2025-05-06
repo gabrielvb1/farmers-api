@@ -4,6 +4,8 @@
 
 A **Farmers API** é uma aplicação backend desenvolvida com [NestJS], [Prisma] e [TypeScript] para gerenciar informações de fazendeiros. A API permite criar, consultar e gerenciar registros de fazendeiros, incluindo dados como nome e CPF/CNPJ. Foi escrita seguindo padrões SOLID e de Clean Code visando ser escalável, com suporte a banco de dados PostgreSQL (via Prisma) e documentação Swagger.
 
+Ela está disponível no endereço https://farmers-api-1omo.onrender.com/api
+
 ### Funcionalidades Principais
 - **Cadastro de Fazendeiros**: Criação de registros com nome e CPF/CNPJ.
 - **Consulta de Fazendeiros**: Recuperação de dados de fazendeiros.
