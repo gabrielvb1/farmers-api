@@ -1,44 +1,28 @@
-# Etapa de build
-FROM node:22-alpine AS builder
+FROM node:20 AS builder
 
-# Definir diretório de trabalho
+# Create app directory
 WORKDIR /app
 
-# Copiar package.json e package-lock.json
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
 
-# Instalar dependências (incluindo devDependencies para build e Prisma)
-RUN npm ci
+# Install app dependencies
+RUN npm install
 
-# Copiar o schema.prisma e outros arquivos
-COPY prisma ./prisma
 COPY . .
 
-# Gerar cliente Prisma
 RUN npx prisma generate
 
-# Compilar TypeScript
+COPY prisma ./prisma/
+
+
 RUN npm run build
 
-# Etapa de produção
-FROM node:22-alpine
+FROM node:20
 
-# Definir diretório de trabalho
-WORKDIR /app
-
-# Copiar package.json e package-lock.json
-COPY package*.json ./
-
-# Instalar apenas dependências de produção
-RUN npm ci --only=production
-
-# Copiar artefatos compilados da etapa de build
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
 
-# Expor porta 3000
 EXPOSE 3000
-
-
-# Comando para iniciar a API
-CMD ["node", "dist/main.js"]
+CMD [ "npm", "run", "start:prod" ]
