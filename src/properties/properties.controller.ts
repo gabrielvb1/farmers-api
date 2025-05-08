@@ -99,17 +99,17 @@ export class PropertiesController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get total number of properties' })
+  @ApiOperation({ summary: 'Retorna o numero total de propriedades' })
   @ApiResponse({
     status: 200,
-    description: 'Total number of properties',
+    description: 'Numero total de propriedades',
     schema: {
       example: { total: 42 },
     },
   })
   @ApiResponse({
     status: 404,
-    description: 'No properties found',
+    description: 'Não há propriedades cadastradas',
   })
   async findAll() {
     const total = await this.propertiesService.findAll();
@@ -117,17 +117,19 @@ export class PropertiesController {
   }
 
   @Get('/area')
-  @ApiOperation({ summary: 'Get total area of all properties' })
+  @ApiOperation({
+    summary: 'Retorna a soma total das areas das propriedades cadastradas',
+  })
   @ApiResponse({
     status: 200,
-    description: 'Total area in hectares',
+    description: 'Area total em hectares',
     schema: {
       example: { totalArea: 1000 },
     },
   })
   @ApiResponse({
     status: 404,
-    description: 'No properties found',
+    description: 'Não há prorpiedades cadastradas',
   })
   async findTotalArea() {
     const totalArea = await this.propertiesService.findTotalArea();
@@ -135,15 +137,15 @@ export class PropertiesController {
   }
 
   @Get(':state')
-  @ApiOperation({ summary: 'Get properties by state' })
+  @ApiOperation({ summary: 'Retorna as propriedades por estado' })
   @ApiParam({
     name: 'state',
-    description: 'State abbreviation (e.g., SP, MG)',
+    description: 'Abreviação do estado (SP, MG)',
     example: 'SP',
   })
   @ApiResponse({
     status: 200,
-    description: 'List of properties in the specified state',
+    description: 'Lista de propriedades por determinado estado',
   })
   async findOne(@Param('state') state: string) {
     return this.propertiesService.findByState(state);
@@ -151,7 +153,7 @@ export class PropertiesController {
 
   @Patch(':id')
   @HttpCode(HttpStatus.ACCEPTED)
-  @ApiOperation({ summary: 'Queue update of a property' })
+  @ApiOperation({ summary: 'Enfileiramento da atualização de uma propriedade' })
   @ApiParam({
     name: 'id',
     description: 'Property ID',
@@ -160,7 +162,7 @@ export class PropertiesController {
   @ApiBody({ type: UpdatePropertyDto })
   @ApiResponse({
     status: 202,
-    description: 'Property update queued successfully',
+    description: 'Sucesso no enfileiramento da atualização de uma propriedade',
     schema: {
       example: {
         message: 'Property update queued successfully',
@@ -175,7 +177,7 @@ export class PropertiesController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Invalid input data or property/farmer not found',
+    description: 'Dados incorretos/propriedade não encontrada',
   })
   async update(
     @Param('id') id: string,
@@ -216,7 +218,7 @@ export class PropertiesController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.ACCEPTED)
-  @ApiOperation({ summary: 'Queue deletion of a property' })
+  @ApiOperation({ summary: 'Enfileiramento da deleção de uma propriedade' })
   @ApiParam({
     name: 'id',
     description: 'Property ID',
